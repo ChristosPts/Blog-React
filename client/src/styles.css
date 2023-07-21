@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+*, *::before, *::after{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.App {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #fefefe;
+}
+
+/* -- Header -- */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #d7d7d7;
+  padding: 16px;
+}
+
+.navbar ul {
+   display: flex;
+}
+
+.navbar ul li a{
+  margin: 0 12px; 
+  color: black;
+}
+
+
+/* --  -- */
+main {
+  padding: 16px;
+  background-color: rgb(255, 242, 219);
+  max-width: 1200px;
+  margin: 0px auto;
+ 
+}
+
+.post {
+  width: 700px;
+  margin: 0 auto 36px auto;
+  border: 4px solid white;
+  padding: 8px;
+}
+
+.post img{
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
+  
+}
+
+.post .info{
+  margin: 0;
+  color: rgb(59, 124, 181);
+}
