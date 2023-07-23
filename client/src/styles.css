@@ -71,3 +71,8 @@ main {
   margin: 0;
   color: rgb(59, 124, 181);
 }
+
+.create-post form{
+  display: flex;
+  flex-direction: column;
+}

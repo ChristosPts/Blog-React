@@ -1,5 +1,6 @@
 import { UserContextProvider } from './UserContext'
 import Layout from './layouts/Layout'
+import CreatePost from './pages/CreatePost'
 import HomePage from './pages/HomePage'
 import LogInPage from './pages/LogInPage'
 import RegisterPage from './pages/RegisterPage'
@@ -14,7 +15,8 @@ function App() {
         <Route path = "/" element = { <Layout/> }>
             <Route index element = { <HomePage/> } />
             <Route path = {'/login'} element = { <LogInPage/> }/>
-            <Route path = {'/Register'} element = { <RegisterPage/> }/>
+            <Route path = {'/register'} element = { <RegisterPage/> }/>
+            <Route path = {'/create'} element = { <CreatePost/> }/>
         </Route>
       </Routes>
       </UserContextProvider>
