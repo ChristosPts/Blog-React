@@ -76,3 +76,10 @@ main {
   display: flex;
   flex-direction: column;
 }
+
+.post-page img {
+  max-width: 1200px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
