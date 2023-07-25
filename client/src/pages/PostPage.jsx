@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
 
@@ -31,7 +31,7 @@ function PostPage() {
         })
         .then((response) => {
           // Post deleted successfully, navigate to homepage or other page
-          navigate('/');
+          navigate(`/profile/${userInfo.id}`);
         })
         .catch((error) => {
           console.error('Error deleting post:', error);
@@ -45,9 +45,8 @@ function PostPage() {
     <div className='post-page'>
       <h2>{postInfo.title}</h2>
       <time> {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>
-      <h4>by {postInfo.author.username}</h4>
-
-      {userInfo.id === postInfo.author._id && (
+      <h4>by {postInfo.author?.username}</h4>
+      {userInfo && userInfo.id === postInfo.author?._id && (
         <div>
           <Link className='edit-btn' to={`/edit/${postInfo._id}`}>Edit</Link>
           <button className='delete-btn' onClick={handleDelete}>Delete</button>

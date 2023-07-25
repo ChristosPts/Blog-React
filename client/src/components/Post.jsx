@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+ 
 
 function Post({ title, summary, cover, _id, createdAt, author }) {
   return (
@@ -17,7 +17,7 @@ function Post({ title, summary, cover, _id, createdAt, author }) {
         </Link>
         {author && (
           <p className="info">
-            <Link to={`/author/${author._id}`} className='author'>
+            <Link to={`/profile/${author._id}`} className="author">
               {author.username}
             </Link>
             <time> {format(new Date(createdAt), 'd MMM, yyyy | HH:mm')} </time>

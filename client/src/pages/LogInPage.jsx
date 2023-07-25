@@ -7,6 +7,7 @@ function LogInPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [redirect, setRedirect] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // New state for error message
   const { setUserInfo } = useContext(UserContext);
 
   async function login(e) {
@@ -25,11 +26,11 @@ function LogInPage() {
         setUserInfo(data); // Update the user info in the context
         setRedirect(true);
       } else {
-        alert('Wrong username or password');
+        setErrorMessage('Wrong username or password'); // Set error message for incorrect credentials
       }
     } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login');
+      
+      setErrorMessage('An error occurred during login'); // Set error message for other errors
     }
   }
 
@@ -40,6 +41,7 @@ function LogInPage() {
   return (
     <div className="login">
       <h1>Login</h1>
+      {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Display error message if exists */}
       <form onSubmit={login}>
         <input type="text"
           placeholder='Username'

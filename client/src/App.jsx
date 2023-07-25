@@ -1,12 +1,12 @@
 import { UserContextProvider } from './UserContext'
 import Layout from './layouts/Layout'
+import AuthorProfile from './pages/AuthorProfile'
 import CreatePost from './pages/CreatePost'
 import EditPost from './pages/EditPost'
 import HomePage from './pages/HomePage'
 import LogInPage from './pages/LogInPage'
 import PostPage from './pages/PostPage'
 import RegisterPage from './pages/RegisterPage'
-import './styles.css'
 import {Route, Routes} from "react-router-dom"
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
             <Route path = {'/create'} element = {<CreatePost/>}/>
             <Route path = {'/post/:id'} element = {<PostPage/>}/>
             <Route path = {'/edit/:id'} element = {<EditPost/>}/>
+            <Route path={'/profile/:authorId'} element={<AuthorProfile />} />
         </Route>
       </Routes>
       </UserContextProvider>

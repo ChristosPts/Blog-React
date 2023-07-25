@@ -44,9 +44,14 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const userDoc = await User.findOne({ username });
+  
+    if (!userDoc) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+  
     const passCheck = bcrypt.compareSync(password, userDoc.password);
     if (passCheck) {
-      //logged in
+      // logged in
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
         res.cookie('token', token, { httpOnly: true }).json({
@@ -55,8 +60,8 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
         });
       });
     } else {
-      res.status(400).json('wrong.credentials');
-  }
+      res.status(400).json({ error: 'Wrong credentials' });
+    }
   });
 
 
@@ -212,7 +217,28 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
     });
   });
   
-
+  app.get('/profile/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+  
+    try {
+      // Find the user by the given authorId
+      const user = await User.findById(authorId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'Author not found' });
+      }
+  
+      // Find posts by the authorId and populate the 'author' field with 'username'
+      const posts = await Post.find({ author: authorId })
+        .populate('author', ['username'])
+        .sort({ createdAt: -1 })
+        .limit(10); // Limit the results to 10 posts
+  
+      res.json({ author: user.username, posts });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
   app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
