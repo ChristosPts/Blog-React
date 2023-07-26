@@ -18,7 +18,8 @@ function PostPage() {
         setPostInfo(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching post:', error);
+       // console.error('Error fetching post:', error);
+        navigate('/');
       });
   }, []);
 
@@ -39,7 +40,9 @@ function PostPage() {
     }
   };
 
-  if (!postInfo) return '';
+  if (!postInfo) {
+    return null;
+  }
 
   return (
     <div className='post-page'>

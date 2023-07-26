@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'; // Import useParams hook
+import { useNavigate, useParams } from 'react-router-dom'; // Import useParams hook
 import Post from '../components/Post';
  
 function AuthorProfile() {
   const { authorId } = useParams(); // Access the authorId from the URL params
   const [author, setAuthor] = useState('');
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch the author's profile data and posts
@@ -21,9 +22,11 @@ function AuthorProfile() {
       })
       .catch((error) => {
         console.error('Error fetching author profile:', error);
+        navigate('/')
       });
   }, [authorId]); // Use authorId as a dependency for the useEffect hook
 
+  
   return (
     <div>
       <h2>Author Profile: {author}</h2>

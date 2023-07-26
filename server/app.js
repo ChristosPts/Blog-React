@@ -174,11 +174,18 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
   
 
  //fetching a single post
-  app.get('/post/:id', async (req,res) => {
-    const {id} = req.params
-    const postDoc = await Post.findById(id).populate('author', ['username'])
-    res.json(postDoc)
-  })
+ app.get('/post/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const postDoc = await Post.findById(id).populate('author', ['username']);
+    if (!postDoc) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+    res.json(postDoc);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
   app.delete('/post/:id', async (req, res) => {

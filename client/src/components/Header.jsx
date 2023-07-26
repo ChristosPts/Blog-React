@@ -54,9 +54,8 @@ function Header() {
                     <button className='dropbtn'>Actions</button>
                     <div className='dropdown-content'>
                       <Link to='/create'>Create New Post</Link>
-                      {userInfo && (
-                        <Link to={`/profile/${userInfo.id}`}>Profile</Link>
-                      )}
+                      <Link to={`/profile/${userInfo.id}`}>Profile</Link>
+                      <Link to={`/settings/${userInfo.id}`}>Settings</Link>
                     </div>
                   </div>
                   </li>

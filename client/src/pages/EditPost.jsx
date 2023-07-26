@@ -12,7 +12,9 @@ function EditPost() {
   const [files, setFiles] = useState('');
   const [cover, setCover] = useState('');
   const [redirect, setRedirect] = useState(false);
-
+  const [isAuthor, setIsAuthor] = useState(false); 
+ 
+ 
   useEffect(() => {
     axios.get(`http://localhost:5000/post/${id}`)
       .then(response => {
@@ -20,9 +22,18 @@ function EditPost() {
         setTitle(postInfo.title);
         setContent(postInfo.content);
         setSummary(postInfo.summary);
+        //-
+        axios.get('http://localhost:5000/user', { withCredentials: true })
+        .then(response => {
+          const userId = response.data.id;
+
+          // Check if the user is the author of the post
+          setIsAuthor(userId === postInfo.author?._id);
+        })
+        //*
       })
       .catch(error => {
-        console.error('Error fetching post:', error);
+        console.error('Error fetching post. You do not have access');
       });
   }, []);
 
@@ -52,6 +63,11 @@ function EditPost() {
 
   if (redirect) {
     return <Navigate to={'/post/' + id} />
+  }
+
+  if (!isAuthor) {
+    // User is not the author, redirect to home page
+    return <Navigate to={'/'} />;
   }
 
   return (

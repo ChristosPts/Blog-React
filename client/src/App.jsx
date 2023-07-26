@@ -22,6 +22,7 @@ function App() {
             <Route path = {'/post/:id'} element = {<PostPage/>}/>
             <Route path = {'/edit/:id'} element = {<EditPost/>}/>
             <Route path={'/profile/:authorId'} element={<AuthorProfile />} />
+            <Route path='*' element={<HomePage/>} /> 
         </Route>
       </Routes>
       </UserContextProvider>
