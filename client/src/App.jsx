@@ -8,6 +8,7 @@ import LogInPage from './pages/LogInPage'
 import PostPage from './pages/PostPage'
 import RegisterPage from './pages/RegisterPage'
 import {Route, Routes} from "react-router-dom"
+ 
 
 function App() {
   return (

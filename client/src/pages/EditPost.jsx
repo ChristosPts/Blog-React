@@ -5,16 +5,15 @@ import Editor from '../components/Editor';
 import axios from 'axios';
 
 function EditPost() {
-  const { id } = useParams();
+  const { id,authorId } = useParams();
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [cover, setCover] = useState('');
   const [redirect, setRedirect] = useState(false);
-  const [isAuthor, setIsAuthor] = useState(false); 
- 
- 
+  const [isAuthor, setIsAuthor] = useState(null); 
+  
   useEffect(() => {
     axios.get(`http://localhost:5000/post/${id}`)
       .then(response => {
@@ -22,15 +21,16 @@ function EditPost() {
         setTitle(postInfo.title);
         setContent(postInfo.content);
         setSummary(postInfo.summary);
-        //-
-        axios.get('http://localhost:5000/user', { withCredentials: true })
-        .then(response => {
-          const userId = response.data.id;
-
-          // Check if the user is the author of the post
-          setIsAuthor(userId === postInfo.author?._id);
-        })
-        //*
+  
+        axios.get('http://localhost:5000/profile', { withCredentials: true })
+          .then(response => {
+            const userId = response.data.id;
+            if (userId === postInfo.author?._id) {
+              setIsAuthor(true);
+            } else {
+              setIsAuthor(false);
+            }
+          })
       })
       .catch(error => {
         console.error('Error fetching post. You do not have access');
@@ -65,11 +65,14 @@ function EditPost() {
     return <Navigate to={'/post/' + id} />
   }
 
-  if (!isAuthor) {
-    // User is not the author, redirect to home page
-    return <Navigate to={'/'} />;
-  }
+ 
 
+  if (isAuthor === false) {
+   
+     return <Navigate to={'/'} />;
+  } 
+
+  
   return (
     <div className='create-post'>
       <form onSubmit={updatePost}>
@@ -85,7 +88,7 @@ function EditPost() {
           placeholder='Image'
           onChange={e => setFiles(e.target.files)} />
         <Editor onChange={setContent} value={content} />
-        <button className="post">Submit</button>
+        <button>Submit</button>
       </form>
     </div>
   )

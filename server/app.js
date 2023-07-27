@@ -145,7 +145,7 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
         return;
       }
   
-      await postDoc.update({
+      await postDoc.updateOne({
         title,
         summary,
         content,
@@ -173,19 +173,32 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
   });
   
 
- //fetching a single post
- app.get('/post/:id', async (req, res) => {
+//fetching a single post
+app.get('/post/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const postDoc = await Post.findById(id).populate('author', ['username']);
     if (!postDoc) {
       return res.status(404).json({ error: 'Post not found' });
     }
-    res.json(postDoc);
+
+    // Check if the user is the author of the post
+    const { token } = req.cookies;
+    if (!token) {
+      return res.json({ post: postDoc, isAuthor: false });
+    }
+
+    jwt.verify(token, secret, {}, (err, info) => {
+      if (err) {
+        return res.json({ post: postDoc, isAuthor: false });
+      }
+      res.json({ post: postDoc, isAuthor: JSON.stringify(postDoc.author) === JSON.stringify(info.id) });
+    });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
   app.delete('/post/:id', async (req, res) => {

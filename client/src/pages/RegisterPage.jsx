@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Navigate } from 'react-router-dom';
+import '../styles/loginRegister.css'
+import { UserContext } from '../UserContext';
+import eye from '../styles/eye.svg';
+import eyec from '../styles/eye-closed.svg';
+
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -40,41 +45,59 @@ function RegisterPage() {
   if (redirect) {
     return <Navigate to={'/'} />
   }
+  
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  if (isLoggedIn === true) {
+    return <Navigate to={'/'} />;
+  }
 
   return (
-    <div className='register'>
+    <div className='register-page'>
       <h1>Register</h1>
+     
       <form action='' onSubmit={register}>
+        <h4>Username</h4>
         <input
           type='text'
           placeholder='Username'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <div style={{ position: 'relative' }}>
+      
+        <h4>Password</h4>
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder='Password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button
-            type='button'
- 
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
-        </div>
-        {/* Add Confirm Password input */}
+
+         
+        <h4>Confirm Password</h4>
         <input
           type={showPassword ? 'text' : 'password'}
           placeholder='Confirm Password'
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <button>Register</button>
+        <button
+          type='button'
+          className='show-hide-btn'
+          onClick={() => setShowPassword(!showPassword)}
+        >
+             {showPassword ? (
+            <>
+               Hide Password <img src={eyec} alt="Hide" />
+            </>
+          ) : (
+            <>
+               Show Password <img src={eye} alt="Show" />
+            </>
+          )}
+          </button>  <hr/>
+        <button type="submit">Register</button>
       </form>
+
     </div>
   );
 }
