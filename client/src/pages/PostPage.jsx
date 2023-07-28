@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../UserContext';
@@ -45,18 +45,30 @@ function PostPage() {
   }
 
   return (
-    <div className='post-page'>
+    <div className='post-page my-5 pt-3'>
       <h2>{postInfo.title}</h2>
-      <time> {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>
-      <h4>by {postInfo.author?.username}</h4>
-      {userInfo && userInfo.id === postInfo.author?._id && (
+      <h5>{postInfo.summary}</h5>
+      
+      <div className="author-info d-flex justify-content-between align-items-center mb-2">
         <div>
-          <Link className='edit-btn' to={`/edit/${postInfo._id}`}>Edit</Link>
-          <button className='delete-btn' onClick={handleDelete}>Delete</button>
+          <span className="me-2">by</span> 
+          <Link to={`/profile/${postInfo.author._id}`} className="author">
+            {postInfo.author?.username}
+          </Link>
         </div>
-      )}
-      <img src={`http://localhost:5000/${postInfo.cover}`} alt="" />
-      <p dangerouslySetInnerHTML={{ __html: postInfo.content }}></p>
+              
+        {userInfo && userInfo.id === postInfo.author?._id && (
+          <div className="d-flex align-items-center">
+            <Link className='edit-btn me-3' to={`/edit/${postInfo._id}`}>Edit</Link>
+            <button className='delete-btn' title='Delete post' onClick={handleDelete}><i className="bi bi-trash"></i></button>
+          </div>
+        )}
+      </div>
+
+     
+      <img className="mb-2" src={`http://localhost:5000/${postInfo.cover}`} alt="" />
+      <time > {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>
+      <p className="mt-3" dangerouslySetInnerHTML={{ __html: postInfo.content }}></p>
     </div>
   );
 }

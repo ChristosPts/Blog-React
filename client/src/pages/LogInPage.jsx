@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Navigate } from "react-router-dom";
 import { UserContext } from '../UserContext';
 import axios from 'axios';
-import '../styles/loginRegister.css'
+import '../styles/forms.css'
 import eye from '../styles/eye.svg';
 import eyec from '../styles/eye-closed.svg';
 
@@ -42,7 +42,7 @@ function LogInPage() {
 
   const isLoggedIn = localStorage.getItem('isLoggedIn');
 
-  if (isLoggedIn === true) {
+  if (isLoggedIn === 'true') {
     return <Navigate to={'/'} />;
   }
 

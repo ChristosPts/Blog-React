@@ -10,7 +10,7 @@ const modules = {
       [{ 'color': [] }],
       [{ 'align': [] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
+      ['link'],
       ['clean'],
     ],
   };
@@ -21,7 +21,7 @@ const modules = {
     'color',
     'align',
     'lists', 'bullets',
-    'link', 'image',
+    'link',
     'clean'
   ]
   

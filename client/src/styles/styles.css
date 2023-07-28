@@ -12,6 +12,14 @@ body {
 
 a {
   text-decoration: none;
+  color: #02a8e6;
+  transition: .2s all;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #0187c6;
 }
 
 ul {
@@ -25,35 +33,28 @@ ul {
  
 }
 
+.container { 
+  min-height: 80vh;
+}
 
 
 /* --  -- */
  
-
+ 
 .posts {
   padding: 24px 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
- 
+  margin: auto 16px;
 }
 
-.post {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin: 12px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, 0.265);
-  overflow: hidden;
-  height: 360px;
-  width: 270px;
+.card { 
+  width: 18rem !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .post img{
-  display: flex;
   width: 100%;
   height: 160px; 
   object-fit: cover;
@@ -61,31 +62,32 @@ ul {
   margin-bottom: 8px;
 }
 
-.post-page img{
-  display: flex;
+.post-page img {
   width: 100%;
-  height: 400px; 
-  object-fit: cover;
+  height: 50vh;
+  object-fit:cover;
   object-position: center;
-  margin-bottom: 8px;
 }
 
-
- .post-info {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 0 8px;
+ .delete-btn {
+  outline: none;
+  border: none;
+  
+  padding: 2px;
+  font-size: 20px;
+  width: 30px;
+  height: 30px;
+  color: #e35656;
+  border-radius: 4px;
+  transition: .2s all ;
  }
 
- .post time {
-   padding-bottom: 12px;
-   margin-top: auto; 
-}
+ .delete-btn:hover{
+  color: #e43e3e;
+  
  
-
-
-
+ }
+ 
 
 
 .create-post form{
@@ -101,3 +103,19 @@ header img {
 .navbar-brand {
   font-size: 30px;
 }
+
+.post-page h2 {
+  border-left: 4px solid #e43e3e;
+  padding-left: 12px;
+}
+ 
+
+@media screen and (max-width: 768px) {
+  .post-page img {
+    
+    height: 30vh;
+ 
+  }
+}
+
+ 

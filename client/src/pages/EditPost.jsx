@@ -10,7 +10,6 @@ function EditPost() {
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
-  const [cover, setCover] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [isAuthor, setIsAuthor] = useState(null); 
   
@@ -65,16 +64,14 @@ function EditPost() {
     return <Navigate to={'/post/' + id} />
   }
 
- 
-
   if (isAuthor === false) {
-   
      return <Navigate to={'/'} />;
   } 
 
   
   return (
-    <div className='create-post'>
+    <div className='post-editor py-5'>
+        <h1 className='text-center py-3'>Editing {title}</h1>
       <form onSubmit={updatePost}>
         <input type="title"
           placeholder='Title'

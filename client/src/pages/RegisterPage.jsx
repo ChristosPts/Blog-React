@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { Navigate } from 'react-router-dom';
-import '../styles/loginRegister.css'
-import { UserContext } from '../UserContext';
+import '../styles/forms.css'
 import eye from '../styles/eye.svg';
 import eyec from '../styles/eye-closed.svg';
 
@@ -14,6 +13,8 @@ function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false); // State for showing/hiding password
   const [redirect, setRedirect] = useState(false);
 
+
+  
   async function register(e) {
     e.preventDefault();
 
@@ -43,11 +44,11 @@ function RegisterPage() {
   }
 
   if (redirect) {
-    return <Navigate to={'/'} />
+    return <Navigate to={'/login'} />
   }
   
   const isLoggedIn = localStorage.getItem('isLoggedIn');
-  if (isLoggedIn === true) {
+  if (isLoggedIn === 'true') {
     return <Navigate to={'/'} />;
   }
 

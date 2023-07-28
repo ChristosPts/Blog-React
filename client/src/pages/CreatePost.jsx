@@ -1,5 +1,5 @@
 // CreatePost.jsx
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { Navigate } from 'react-router-dom';
 import Editor from '../components/Editor';
@@ -13,7 +13,6 @@ function CreatePost() {
   const [redirect, setRedirect] = useState(false);
 
   const MIN_TITLE_WORDS = 3;
-  const MAX_TITLE_WORDS = 5;
   const MIN_SUMMARY_WORDS = 5;
   const MAX_SUMMARY_WORDS = 30;
   const MIN_CONTENT_WORDS = 50;
@@ -24,8 +23,8 @@ function CreatePost() {
     const summaryWords = summary.split(' ').filter(Boolean).length;
     const contentWords = content.split(' ').filter(Boolean).length;
 
-    if (titleWords < MIN_TITLE_WORDS || titleWords > MAX_TITLE_WORDS) {
-      alert(`Title must have between ${MIN_TITLE_WORDS} and ${MAX_TITLE_WORDS} words.`);
+    if (titleWords < MIN_TITLE_WORDS) {
+      alert(`Title must have at least ${MIN_TITLE_WORDS}`);
       return false;
     }
 
@@ -73,12 +72,21 @@ function CreatePost() {
     }
   }
 
+
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  if (isLoggedIn === 'false') {
+    return <Navigate to={'/'} />;
+  }
+
   if (redirect) {
     return <Navigate to={'/'} />;
   }
 
   return (
-    <div className='create-post'>
+    <div className='post-editor py-5'>
+     <h1 className='text-center py-3'>Create a new Post</h1>
+
       <form onSubmit={createNewPost}>
         <input
           type='title'

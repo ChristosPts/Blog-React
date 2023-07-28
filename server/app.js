@@ -145,7 +145,7 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
         return;
       }
   
-      await postDoc.updateOne({
+      await postDoc.update({
         title,
         summary,
         content,
@@ -173,93 +173,96 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
   });
   
 
-//fetching a single post
-app.get('/post/:id', async (req, res) => {
+ //fetching a single post
+ app.get('/post/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const postDoc = await Post.findById(id).populate('author', ['username']);
     if (!postDoc) {
       return res.status(404).json({ error: 'Post not found' });
     }
-
-    // Check if the user is the author of the post
-    const { token } = req.cookies;
-    if (!token) {
-      return res.json({ post: postDoc, isAuthor: false });
-    }
-
-    jwt.verify(token, secret, {}, (err, info) => {
-      if (err) {
-        return res.json({ post: postDoc, isAuthor: false });
-      }
-      res.json({ post: postDoc, isAuthor: JSON.stringify(postDoc.author) === JSON.stringify(info.id) });
-    });
+    res.json(postDoc);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 
+app.delete('/post/:id', async (req, res) => {
+  const { id } = req.params;
 
-  app.delete('/post/:id', async (req, res) => {
-    const { id } = req.params;
-  
-    const { token } = req.cookies;
-    jwt.verify(token, secret, {}, async (err, info) => {
-      if (err) {
-        res.status(401).json({ error: 'Invalid token' });
+  const { token } = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) {
+      res.status(401).json({ error: 'Invalid token' });
+      return;
+    }
+
+    try {
+      const postDoc = await Post.findById(id); // Find the post by ID
+      if (!postDoc) {
+        res.status(404).json({ error: 'Post not found' });
         return;
       }
-  
-      try {
-        const postDoc = await Post.findById(id); // Find the post by ID
-        if (!postDoc) {
-          res.status(404).json({ error: 'Post not found' });
-          return;
-        }
-  
-        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-        if (!isAuthor) {
-          res.status(403).json({ error: 'Unauthorized' });
-          return;
-        }
-  
-        // Delete the image from the 'uploads' folder
-        fs.unlinkSync(__dirname + '/' + postDoc.cover);
-  
-        // Delete the post from the database
-        await postDoc.remove();
-  
-        res.json({ message: 'Post deleted successfully' });
-      } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+
+      const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+      if (!isAuthor) {
+        res.status(403).json({ error: 'Unauthorized' });
+        return;
       }
-    });
-  });
-  
-  app.get('/profile/:authorId', async (req, res) => {
-    const { authorId } = req.params;
-  
-    try {
-      // Find the user by the given authorId
-      const user = await User.findById(authorId);
-  
-      if (!user) {
-        return res.status(404).json({ error: 'Author not found' });
-      }
-  
-      // Find posts by the authorId and populate the 'author' field with 'username'
-      const posts = await Post.find({ author: authorId })
-        .populate('author', ['username'])
-        .sort({ createdAt: -1 })
-        .limit(10); // Limit the results to 10 posts
-  
-      res.json({ author: user.username, posts });
+
+      // Delete the image from the 'uploads' folder
+      fs.unlinkSync(__dirname + '/uploads/' + postDoc.cover);
+
+      // Delete the post from the database
+      await postDoc.remove();
+
+      res.json({ message: 'Post deleted successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+});
 
-  app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
-  });
+
+
+app.get('/profile/:authorId', async (req, res) => {
+  const { authorId } = req.params;
+
+  try {
+    // Find the user by the given authorId
+    const user = await User.findById(authorId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
+    // Find posts by the authorId and populate the 'author' field with 'username'
+    const posts = await Post.find({ author: authorId })
+      .populate('author', ['username'])
+      .sort({ createdAt: -1 })
+      .limit(10); // Limit the results to 10 posts
+
+    res.json({ author: user.username, posts });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/profile/:authorId', async (req, res) => {
+  const { authorId } = req.params;
+  
+  try {
+    // Delete the user and all associated posts
+    await User.findByIdAndDelete(authorId);
+    await Post.deleteMany({ author: authorId });
+
+    res.json({ message: 'User and associated posts deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+});

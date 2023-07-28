@@ -4,6 +4,7 @@ import { UserContext } from '../UserContext';
 import axios from 'axios';
 import image from '../styles/artificial-intelligenceai-svgrepo-com.svg';
 
+
 function Header() {
   const { userInfo, setUserInfo } = useContext(UserContext);
  
@@ -37,6 +38,7 @@ function Header() {
       .then(() => {
         setUserInfo(null);
         navigate('/'); // Redirect the user to the home page after logout
+        
       })
       .catch((error) => {
         console.error('Error during logout:', error);
@@ -48,29 +50,33 @@ function Header() {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-lg bg-secondary px-5 py-2">
+      <nav className="navbar navbar-expand-md  navbar-dark bg-dark px-5 py-2">
         
         <Link to='/' className="navbar-brand d-flex ">
-        <img src={image} alt='logo'/> TechWise  
+          <img src={image} alt='logo'/> TechWise  
         </Link>
         
-        <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg">
+        <button className="navbar-toggler " type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="offcanvas offcanvas-start" tabIndex="-1" id="navbarOffcanvasLg">
-        <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+        <div className="offcanvas offcanvas-start bg-dark text-white" tabIndex="-1" id="navbarOffcanvasLg">
+        <div className="offcanvas-header ">
+          <h3 className="offcanvas-title" id="offcanvasNavbarLabel">
+            <Link to='/' className="navbar-brand d-flex ">
+              <img src={image} alt='logo'/> TechWise  
+            </Link>
+          </h3>
           <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-          <div className="offcanvas-body">
-            <ul className="navbar-nav justify-content-end flex-grow-1">
+          <div className="offcanvas-body text-white">
+            <ul className="navbar-nav justify-content-end flex-grow-1 text-white">
               {username && (
               <>
-              <li className="nav-item dropdown me-4">
-                <a className="text-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
+              <li className="nav-item dropdown me-4 ">
+                <a className="text-dark dropdown-toggle text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {username}
                 </a>
-                <ul className="dropdown-menu">
+                <ul className="dropdown-menu text-white">
                   <li> <Link className="dropdown-item" to='/create'>Create New Post</Link> </li>
                   <li> <Link className="dropdown-item" to={`/profile/${userInfo.id}`}>Profile</Link> </li>
                 </ul>
@@ -80,8 +86,8 @@ function Header() {
               )}
               {!username && (
               <>
-                <li> <Link className="nav-item text-dark me-4" to='/login'>Login</Link> </li>
-                <li> <Link className="nav-item text-dark" to='/register'>Register</Link> </li>
+                <li> <Link className="nav-item text-white me-4" to='/login'>Login</Link> </li>
+                <li> <Link className="nav-ite text-white" to='/register'>Register</Link> </li>
             </>
           )}
             </ul>

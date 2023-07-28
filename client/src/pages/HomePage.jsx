@@ -16,11 +16,11 @@ function HomePage() {
   }, []);
 
   return (
-    <>
+    <div className='d-flex flex-wrap justify-content-center'>
       {posts.length > 0 && posts.map(post => (
         <Post key={post._id} {...post} />
       ))}
-    </>
+    </div>
   )
 }
 

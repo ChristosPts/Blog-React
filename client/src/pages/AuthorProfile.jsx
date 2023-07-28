@@ -1,18 +1,17 @@
-// AuthorProfile.jsx
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom'; // Import useParams hook
+import { useNavigate, useParams } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 import Post from '../components/Post';
- 
+
 function AuthorProfile() {
-  const { authorId } = useParams(); // Access the authorId from the URL params
+  const { authorId } = useParams();
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const [author, setAuthor] = useState('');
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the author's profile data and posts
     axios
       .get(`http://localhost:5000/profile/${authorId}`)
       .then((response) => {
@@ -22,15 +21,56 @@ function AuthorProfile() {
       })
       .catch((error) => {
         console.error('Error fetching author profile:', error);
-        navigate('/')
+        navigate('/');
       });
-  }, [authorId]); // Use authorId as a dependency for the useEffect hook
+  }, [authorId]);
 
   
+  function logout() {
+    axios
+      .post('http://localhost:5000/logout', null, {
+        withCredentials: true,
+      })
+      .then(() => {
+        setUserInfo(null);
+        navigate('/'); // Redirect the user to the home page after logout
+      })
+      .catch((error) => {
+        console.error('Error during logout:', error);
+      });
+  }
+
+  const handleDeleteAccount = () => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete your account? Deleting your account will also delete all of your posts.'
+    );
+    if (confirmDelete) {
+      axios
+        .delete(`http://localhost:5000/profile/${authorId}`)
+        .then(() => {
+          // Clear the user info and set isLoggedIn to false
+          setUserInfo(null);
+          localStorage.setItem('isLoggedIn', false);
+          // Logout the user after successful deletion
+          logout();
+        })
+        .catch((error) => {
+          console.error('Error deleting user profile:', error);
+        });
+    } else {
+      // Do nothing if the user cancels the deletion
+    }
+  };
+
+
+
   return (
-    <div>
-      <h2>Author Profile: {author}</h2>
-      <div className="author-posts">
+    <>
+      <h1 className='mt-5'>{author}'s Posts</h1>
+      {userInfo && userInfo.id === authorId && (
+        <button className="delete-profile-btn" onClick={handleDeleteAccount}>Delete</button>
+      )}
+      <div className="author-posts d-flex flex-wrap justify-content-center">
         {posts.map((post) => (
           <Post
             key={post._id}
@@ -43,7 +83,7 @@ function AuthorProfile() {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }
 
