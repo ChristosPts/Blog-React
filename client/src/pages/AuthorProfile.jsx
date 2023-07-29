@@ -65,12 +65,17 @@ function AuthorProfile() {
 
 
   return (
-    <>
-      <h1 className='mt-5'>{author}'s Posts</h1>
-      {userInfo && userInfo.id === authorId && (
-        <button className="delete-profile-btn" onClick={handleDeleteAccount}>Delete</button>
-      )}
-      <div className="author-posts d-flex flex-wrap justify-content-center">
+    <div className='older-section h-100 d-flex flex-column align-items-center py-5'>
+      <div className="row older-section d-flex flex-wrap justify-content-center ">
+          
+      <div className="d-flex justify-content-between align-items-center">
+        <h1>{author}'s Posts</h1>
+        <h4> {userInfo && userInfo.id === authorId && (
+          <a title='Delete Account' className='dlt-acc-btn' onClick={handleDeleteAccount}>Delete</a>
+        )}  </h4>
+     </div>
+
+      <hr/>
         {posts.map((post) => (
           <Post
             key={post._id}
@@ -83,7 +88,7 @@ function AuthorProfile() {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 

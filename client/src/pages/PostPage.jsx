@@ -45,13 +45,13 @@ function PostPage() {
   }
 
   return (
-    <div className='post-page my-5 pt-3'>
+    <div className='post-page py-5'>
       <h2>{postInfo.title}</h2>
       <h5>{postInfo.summary}</h5>
       
       <div className="author-info d-flex justify-content-between align-items-center mb-2">
         <div>
-          <span className="me-2">by</span> 
+          <span className="me-1">by</span> 
           <Link to={`/profile/${postInfo.author._id}`} className="author">
             {postInfo.author?.username}
           </Link>
@@ -67,7 +67,7 @@ function PostPage() {
 
      
       <img className="mb-2" src={`http://localhost:5000/${postInfo.cover}`} alt="" />
-      <time > {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>
+      <time> {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>
       <p className="mt-3" dangerouslySetInnerHTML={{ __html: postInfo.content }}></p>
     </div>
   );

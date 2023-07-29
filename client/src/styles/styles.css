@@ -30,69 +30,18 @@ ul {
   min-height: 100vh;
   overflow-x: hidden;
   background-color: rgb(245, 245, 245);
- 
+  
 }
+
+h1 { font-size: 32px; }
+h2 { font-size: 28px; }
+h3 { font-size: 24px; }
+h4 { font-size: 20px; }
+h5 { font-size: 16px; }
+h6,p,time { font-size: 14px; }
 
 .container { 
   min-height: 80vh;
-}
-
-
-/* --  -- */
- 
- 
-.posts {
-  padding: 24px 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: auto 16px;
-}
-
-.card { 
-  width: 18rem !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.post img{
-  width: 100%;
-  height: 160px; 
-  object-fit: cover;
-  object-position: center;
-  margin-bottom: 8px;
-}
-
-.post-page img {
-  width: 100%;
-  height: 50vh;
-  object-fit:cover;
-  object-position: center;
-}
-
- .delete-btn {
-  outline: none;
-  border: none;
-  
-  padding: 2px;
-  font-size: 20px;
-  width: 30px;
-  height: 30px;
-  color: #e35656;
-  border-radius: 4px;
-  transition: .2s all ;
- }
-
- .delete-btn:hover{
-  color: #e43e3e;
-  
- 
- }
- 
-
-
-.create-post form{
-  display: flex;
-  flex-direction: column;
 }
 
 header img {
@@ -104,10 +53,88 @@ header img {
   font-size: 30px;
 }
 
-.post-page h2 {
+.create-post form{
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* -- Posts -- */
+.card { 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  width: 17rem;
+  
+}
+
+.card img { 
+  width: 100%;
+  height: 160px; 
+  object-fit: cover;
+  object-position: center;
+}
+
+.latest-section .card {
+  width: 100% !important;
+
+  height: 100% !important;
+}
+
+.latest-section .card img{
+  height: 250px; 
+}
+
+
+.older-section {
+  gap: 16px; /* Spacing between cards */
+ 
+}
+ 
+
+/* -- Post Page -- */
+.post-page h1 {
   border-left: 4px solid #e43e3e;
   padding-left: 12px;
 }
+
+.post-page h2 {
+  border-left: 4px solid #02a8e6;
+  padding-left: 12px;
+}
+
+time{
+  border-bottom: 2px solid #e43e3e;
+  padding-bottom: 4px;
+}
+ 
+
+.post-page img {
+  width: 100%;
+  height: 50vh;
+  object-fit:cover;
+  object-position: center;
+}
+
+ .delete-btn {
+  outline: none;
+  border: none;
+  padding: 2px;
+  font-size: 20px;
+  width: 30px;
+  height: 30px;
+  background-color: #e43e3e;
+  border-radius: 4px;
+  transition: .2s all ;
+  color: #111;
+ }
+
+ .delete-btn:hover{
+  background-color: #c02c2c;
+ }
+
+ .dlt-acc-btn { color: #e43e3e; transition: .3s ease all;}
+ .dlt-acc-btn:hover { color: #a82525;}
  
 
 @media screen and (max-width: 768px) {
@@ -117,5 +144,4 @@ header img {
  
   }
 }
-
  

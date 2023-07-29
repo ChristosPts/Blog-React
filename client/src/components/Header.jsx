@@ -37,6 +37,7 @@ function Header() {
       })
       .then(() => {
         setUserInfo(null);
+        localStorage.setItem('isLoggedIn', false); 
         navigate('/'); // Redirect the user to the home page after logout
         
       })

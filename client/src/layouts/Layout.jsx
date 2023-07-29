@@ -7,8 +7,8 @@ function Layout() {
   return (
     <>    
         <Header/>
-        <main className='container'>
-           <div className="row ">
+        <main className='container h-100'>
+           <div className="row h-100 py-5">
             <Outlet/>
             </div>
         </main>

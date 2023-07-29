@@ -12,9 +12,9 @@ function CreatePost() {
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  const MIN_TITLE_WORDS = 3;
+  const MIN_TITLE_WORDS = 2;
   const MIN_SUMMARY_WORDS = 5;
-  const MAX_SUMMARY_WORDS = 30;
+  const MAX_SUMMARY_WORDS = 100;
   const MIN_CONTENT_WORDS = 50;
   const MAX_CONTENT_WORDS = 1000;
 
@@ -24,7 +24,7 @@ function CreatePost() {
     const contentWords = content.split(' ').filter(Boolean).length;
 
     if (titleWords < MIN_TITLE_WORDS) {
-      alert(`Title must have at least ${MIN_TITLE_WORDS}`);
+      alert(`Title must have at least ${MIN_TITLE_WORDS} words`);
       return false;
     }
 
@@ -75,7 +75,7 @@ function CreatePost() {
 
   const isLoggedIn = localStorage.getItem('isLoggedIn');
 
-  if (isLoggedIn === 'false') {
+  if (isLoggedIn === 'false' || localStorage.getItem('isLoggedIn') === null) {
     return <Navigate to={'/'} />;
   }
 

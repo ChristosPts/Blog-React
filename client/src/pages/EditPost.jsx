@@ -36,8 +36,42 @@ function EditPost() {
       });
   }, []);
 
+  const MIN_TITLE_WORDS = 2;
+  const MIN_SUMMARY_WORDS = 5;
+  const MAX_SUMMARY_WORDS = 100;
+  const MIN_CONTENT_WORDS = 50;
+  const MAX_CONTENT_WORDS = 1000;
+
+  function validateFields() {
+    const titleWords = title.split(' ').filter(Boolean).length;
+    const summaryWords = summary.split(' ').filter(Boolean).length;
+    const contentWords = content.split(' ').filter(Boolean).length;
+
+    if (titleWords < MIN_TITLE_WORDS) {
+      alert(`Title must have at least ${MIN_TITLE_WORDS} words`);
+      return false;
+    }
+
+    if (summaryWords < MIN_SUMMARY_WORDS || summaryWords > MAX_SUMMARY_WORDS) {
+      alert(`Summary must have between ${MIN_SUMMARY_WORDS} and ${MAX_SUMMARY_WORDS} words.`);
+      return false;
+    }
+
+    if (contentWords < MIN_CONTENT_WORDS || contentWords > MAX_CONTENT_WORDS) {
+      alert(`Content must have between ${MIN_CONTENT_WORDS} and ${MAX_CONTENT_WORDS} words.`);
+      return false;
+    }
+
+    return true;
+  }
+
   async function updatePost(e) {
     e.preventDefault();
+
+    if (!validateFields()) {
+      return;
+    }
+
     const data = new FormData();
     data.set('title', title);
     data.set('summary', summary);
@@ -64,7 +98,7 @@ function EditPost() {
     return <Navigate to={'/post/' + id} />
   }
 
-  if (isAuthor === false) {
+  if (isAuthor === false || localStorage.getItem('isLoggedIn') === null) {
      return <Navigate to={'/'} />;
   } 
 

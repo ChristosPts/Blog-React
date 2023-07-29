@@ -16,7 +16,7 @@ function Footer() {
         </Link>
       </li>
     </ul>
-    <p className="text-center">© TechWise - No rights reserved</p>
+    <p className="text-center pt-3">© TechWise - No rights reserved</p>
   </footer>
   )
 }
