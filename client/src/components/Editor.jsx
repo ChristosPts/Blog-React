@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactQuill from 'react-quill';
 
-
-
 const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -24,7 +22,6 @@ const modules = {
     'link',
     'clean'
   ]
-  
 
 function Editor({value,onChange}) {
   return (

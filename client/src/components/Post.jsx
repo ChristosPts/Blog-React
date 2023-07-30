@@ -14,7 +14,6 @@ function Post({ title, summary, cover, _id, createdAt, author }) {
   const truncatedSummary = truncateSummary(summary, 20);
   
   return (
-  
     <div className="card my-3 pb-2" >
       <Link to={`/post/${_id}`}>
         <div className="card-img-top">
@@ -38,7 +37,6 @@ function Post({ title, summary, cover, _id, createdAt, author }) {
         </div>
       </div>
     </div>
-  
   );
 }
 

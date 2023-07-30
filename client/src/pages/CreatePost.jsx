@@ -1,9 +1,9 @@
-// CreatePost.jsx
 import React, { useContext, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { Navigate } from 'react-router-dom';
 import Editor from '../components/Editor';
 import axios from 'axios';
+import { UserContext } from '../UserContext';
 
 function CreatePost() {
   const [title, setTitle] = useState('');
@@ -11,6 +11,9 @@ function CreatePost() {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
+
+  const { userInfo } = useContext(UserContext);
+  const uname = userInfo?.username;
 
   const MIN_TITLE_WORDS = 2;
   const MIN_SUMMARY_WORDS = 5;
@@ -42,16 +45,12 @@ function CreatePost() {
       alert('Please upload an image.');
       return false;
     }
-
     return true;
   }
 
   async function createNewPost(e) {
     e.preventDefault();
-
-    if (!validateFields()) {
-      return;
-    }
+    if (!validateFields()) { return; }
 
     const data = new FormData();
     data.set('title', title);
@@ -72,14 +71,7 @@ function CreatePost() {
     }
   }
 
-
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-  if (isLoggedIn === 'false' || localStorage.getItem('isLoggedIn') === null) {
-    return <Navigate to={'/'} />;
-  }
-
-  if (redirect) {
+  if (redirect || uname === undefined || uname === null) {
     return <Navigate to={'/'} />;
   }
 

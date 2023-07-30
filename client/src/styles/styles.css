@@ -4,6 +4,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -65,7 +66,7 @@ header img {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 0;
   width: 17rem;
-  
+  border-radius: 8px;
 }
 
 .card img { 
@@ -73,6 +74,7 @@ header img {
   height: 160px; 
   object-fit: cover;
   object-position: center;
+  border-radius: 8px 8px 0 0;
 }
 
 .latest-section .card {
@@ -99,7 +101,7 @@ header img {
 }
 
 .post-page h2 {
-  border-left: 4px solid #02a8e6;
+  border-left: 4px solid #0187c6;
   padding-left: 12px;
 }
 
@@ -116,32 +118,66 @@ time{
   object-position: center;
 }
 
- .delete-btn {
+ .delete-btn, 
+ .edit-btn {
   outline: none;
   border: none;
-  padding: 2px;
   font-size: 20px;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   background-color: #e43e3e;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: .2s all ;
   color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
  }
-
- .delete-btn:hover{
-  background-color: #c02c2c;
+ .delete-btn:hover{ background-color: #c02c2c; }
+ .edit-btn { background-color: #02a8e6; }
+ .edit-btn:hover {
+  background-color: #0187c6;
+  color: #111;
  }
-
+ 
  .dlt-acc-btn { color: #e43e3e; transition: .3s ease all;}
  .dlt-acc-btn:hover { color: #a82525;}
  
+  @media screen and (max-width: 768px) {
+    .post-page img {
+      height: 30vh;
+    }
 
-@media screen and (max-width: 768px) {
-  .post-page img {
-    
-    height: 30vh;
- 
+    .navbar {
+      padding: 8px 16px !important;
+    }
+
   }
-}
  
+  .header {
+    height: 30vh;
+    background-color: #a82525 !important;
+    width: 100vw !important;
+    padding-top: 0px !important;
+    margin-top: 0 !important;
+  }
+
+  .scroll-to-top {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #0187c6;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .scroll-to-top.visible {
+    display: flex;
+  }

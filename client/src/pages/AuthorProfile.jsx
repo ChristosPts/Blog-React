@@ -24,7 +24,6 @@ function AuthorProfile() {
         navigate('/');
       });
   }, [authorId]);
-
   
   function logout() {
     axios
@@ -48,9 +47,7 @@ function AuthorProfile() {
       axios
         .delete(`http://localhost:5000/profile/${authorId}`)
         .then(() => {
-          // Clear the user info and set isLoggedIn to false
-          setUserInfo(null);
-          localStorage.setItem('isLoggedIn', false);
+           setUserInfo(null);
           // Logout the user after successful deletion
           logout();
         })
@@ -62,8 +59,6 @@ function AuthorProfile() {
     }
   };
 
-
-
   return (
     <div className='older-section h-100 d-flex flex-column align-items-center py-5'>
       <div className="row older-section d-flex flex-wrap justify-content-center ">
@@ -72,21 +67,20 @@ function AuthorProfile() {
         <h1>{author}'s Posts</h1>
         <h4> {userInfo && userInfo.id === authorId && (
           <a title='Delete Account' className='dlt-acc-btn' onClick={handleDeleteAccount}>Delete</a>
-        )}  </h4>
+        )} </h4>
      </div>
-
       <hr/>
-        {posts.map((post) => (
-          <Post
-            key={post._id}
-            title={post.title}
-            summary={post.summary}
-            cover={post.cover}
-            _id={post._id}
-            createdAt={post.createdAt}
-            author={post.author}
-          />
-        ))}
+      {posts.map((post) => (
+        <Post
+          key={post._id}
+          title={post.title}
+          summary={post.summary}
+          cover={post.cover}
+          _id={post._id}
+          createdAt={post.createdAt}
+          author={post.author}
+        />
+      ))}
       </div>
     </div>
   );

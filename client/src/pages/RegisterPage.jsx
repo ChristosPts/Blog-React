@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import '../styles/forms.css'
-import eye from '../styles/eye.svg';
-import eyec from '../styles/eye-closed.svg';
-
+import eye from '../styles/imgs/eye.svg';
+import eyec from '../styles/imgs/eye-closed.svg';
+import { UserContext } from '../UserContext';
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -12,12 +12,12 @@ function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // State for showing/hiding password
   const [redirect, setRedirect] = useState(false);
-
-
+  
+  const { userInfo } = useContext(UserContext);
+  const uname = userInfo?.username;
   
   async function register(e) {
     e.preventDefault();
-
     // Check if the passwords match
     if (password !== confirmPassword) {
       alert('Passwords do not match. Please enter the same password in both fields.');
@@ -32,7 +32,6 @@ function RegisterPage() {
 
       if (response.status === 200) {
         setRedirect(true);
-
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -43,19 +42,12 @@ function RegisterPage() {
     }
   }
 
-  if (redirect) {
-    return <Navigate to={'/login'} />
-  }
-  
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  if (isLoggedIn === 'true') {
-    return <Navigate to={'/'} />;
-  }
-
+  if (redirect) { return <Navigate to={'/login'}/> }
+  if (uname !== undefined ) { return <Navigate to={'/'}/>; }
+    
   return (
     <div className='register-page'>
-      <h1>Register</h1>
-     
+      <h1>Register</h1> 
       <form action='' onSubmit={register}>
         <h4>Username</h4>
         <input
@@ -64,7 +56,7 @@ function RegisterPage() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      
+        
         <h4>Password</h4>
           <input
             type={showPassword ? 'text' : 'password'}
@@ -72,33 +64,28 @@ function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
          
         <h4>Confirm Password</h4>
-        <input
-          type={showPassword ? 'text' : 'password'}
-          placeholder='Confirm Password'
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder='Confirm Password'
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+
         <button
           type='button'
           className='show-hide-btn'
           onClick={() => setShowPassword(!showPassword)}
         >
-             {showPassword ? (
-            <>
-               Hide Password <img src={eyec} alt="Hide" />
-            </>
-          ) : (
-            <>
-               Show Password <img src={eye} alt="Show" />
-            </>
-          )}
-          </button>  <hr/>
+        {showPassword ? (
+          <>  Hide Password <img src={eyec} alt="Hide" /></>
+            ) : ( <> Show Password <img src={eye} alt="Show" /> </>  
+        )}    
+        </button> 
+        <hr/>
         <button type="submit">Register</button>
       </form>
-
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { Navigate, useParams } from 'react-router-dom';
 import Editor from '../components/Editor';
 import axios from 'axios';
+import { UserContext } from '../UserContext';
 
 function EditPost() {
   const { id,authorId } = useParams();
@@ -11,8 +12,11 @@ function EditPost() {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState('');
   const [redirect, setRedirect] = useState(false);
-  const [isAuthor, setIsAuthor] = useState(null); 
+  const [isAuthor, setIsAuthor] = useState(); 
   
+  const { userInfo } = useContext(UserContext);
+  const uname = userInfo?.username;
+
   useEffect(() => {
     axios.get(`http://localhost:5000/post/${id}`)
       .then(response => {
@@ -61,7 +65,6 @@ function EditPost() {
       alert(`Content must have between ${MIN_CONTENT_WORDS} and ${MAX_CONTENT_WORDS} words.`);
       return false;
     }
-
     return true;
   }
 
@@ -97,12 +100,11 @@ function EditPost() {
   if (redirect) {
     return <Navigate to={'/post/' + id} />
   }
-
-  if (isAuthor === false || localStorage.getItem('isLoggedIn') === null) {
+  console.log(isAuthor)
+  if (isAuthor === false || uname === undefined) {
      return <Navigate to={'/'} />;
   } 
 
-  
   return (
     <div className='post-editor py-5'>
         <h1 className='text-center py-3'>Editing {title}</h1>

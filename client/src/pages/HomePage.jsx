@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React, { useEffect, useState } from 'react';
 import Post from '../components/Post';
 import axios from 'axios';
@@ -21,10 +20,8 @@ function HomePage() {
   const otherPosts = posts.slice(4);
 
   return (
-    <div className='py-5 h-100 d-flex flex-column align-items-center'>
-      
-     
-      <div className='row latest-section d-flex '>
+    <div className='py-5 h-100 d-flex flex-column align-items-center '>
+      <div className='row latest-section d-flex w-100'>
       <h1>Latest News</h1> <hr/>
         <div className='col-lg-8 d-flex flex-column  '>
           {recentPosts.length > 0 && recentPosts.slice(0, 2).map(post => (
@@ -37,11 +34,8 @@ function HomePage() {
           ))}
         </div>
       </div>
-
-      
-      
      
-        <div className='row older-section d-flex flex-wrap justify-content-center '>
+        <div className='row older-section d-flex flex-wrap justify-content-center w-100'>
         <h1 className='mt-5'>Older Posts</h1> <hr/>
           {otherPosts.length > 0 && otherPosts.map(post => (
             <Post key={post._id} {...post} />

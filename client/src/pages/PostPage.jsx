@@ -23,26 +23,24 @@ function PostPage() {
       });
   }, []);
 
-  const handleDelete = () => {
+  const handleDelete = async  () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     if (confirmDelete) {
-      axios
-        .delete(`http://localhost:5000/post/${id}`, {
+      try {
+        await axios.delete(`http://localhost:5000/post/${id}`, {
           withCredentials: true,
-        })
-        .then((response) => {
-          // Post deleted successfully, navigate to homepage or other page
-          navigate(`/profile/${userInfo.id}`);
-        })
-        .catch((error) => {
-          console.error('Error deleting post:', error);
         });
+        
+        navigate(`/profile/${userInfo.id}`);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+      }
     }
   };
 
-  if (!postInfo) {
-    return null;
-  }
+  if (!postInfo) { return null; }
+    
+  
 
   return (
     <div className='post-page py-5'>
@@ -59,12 +57,11 @@ function PostPage() {
               
         {userInfo && userInfo.id === postInfo.author?._id && (
           <div className="d-flex align-items-center">
-            <Link className='edit-btn me-3' to={`/edit/${postInfo._id}`}>Edit</Link>
+            <Link className='edit-btn me-2' title='Edit post' to={`/edit/${postInfo._id}`}><i className="bi bi-pencil-square"></i></Link> 
             <button className='delete-btn' title='Delete post' onClick={handleDelete}><i className="bi bi-trash"></i></button>
           </div>
         )}
       </div>
-
      
       <img className="mb-2" src={`http://localhost:5000/${postInfo.cover}`} alt="" />
       <time> {format(new Date(postInfo.createdAt), 'd MMM, yyyy | HH:mm')} </time>

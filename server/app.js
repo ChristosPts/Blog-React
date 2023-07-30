@@ -13,16 +13,12 @@ const fs = require('fs');
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "diwjo123waEPLj190";
-
 const PORT = 5000;
 
-// Use the cors middleware with the allowed origin and credentials set to true
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
-
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
-
 
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mongodb.net/?retryWrites=true&w=majority');
@@ -39,7 +35,6 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
       res.status(400).json(e);
     }
   });
-
 
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -64,7 +59,6 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
     }
   });
 
-
   app.get('/profile', (req, res) => {
     const { token } = req.cookies;
     if (!token) {
@@ -76,7 +70,6 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
         res.json(info);
     });
   });
-
 
   app.post('/logout', (req, res) => {
     res.clearCookie('token').json({ message: 'Logged out successfully' });
@@ -116,15 +109,7 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
   app.put('/post/:id', uploadMiddleware.single('file'), async (req, res) => {
     const { id } = req.params; // Get the post ID from the URL parameter
     let newPath = null;
-    if (req.file) {
-      const { originalname, path } = req.file;
-      const parts = originalname.split('.');
-      const ext = parts[parts.length - 1];
-      newPath = path + '.' + ext;
-  
-      fs.renameSync(path, newPath);
-    }
-  
+    
     const { token } = req.cookies;
     jwt.verify(token, secret, {}, async (err, info) => {
       if (err) {
@@ -144,8 +129,19 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
         res.status(403).json({ error: 'Unauthorized' });
         return;
       }
+
+    if (req.file) {
+      if (postDoc.cover) {
+        fs.unlinkSync(__dirname + '/' + postDoc.cover);
+      }
+      const { originalname, path } = req.file;
+      const parts = originalname.split('.');
+      const ext = parts[parts.length - 1];
+      newPath = path + '.' + ext;
+      fs.renameSync(path, newPath);
+    }
   
-      await postDoc.update({
+      await postDoc.updateOne({
         title,
         summary,
         content,
@@ -156,15 +152,13 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
     });
   });
 
-
-
 //fetching posts
   app.get('/post', async (req, res) => {
     try {
       const posts = await Post.find()
         .populate('author', ['username'])
         .sort({ createdAt: -1 }) // Sort by 'createdAt' field in descending order
-        .limit(20); // Limit the results to 20 posts
+        .limit(24); // Limit the results to 20 posts
   
       res.json(posts);
     } catch (error) {
@@ -172,97 +166,102 @@ mongoose.connect('mongodb+srv://chpidevtest:0mR9dKv1squafltT@cluster0.xdi4s0z.mo
     }
   });
   
-
  //fetching a single post
- app.get('/post/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const postDoc = await Post.findById(id).populate('author', ['username']);
-    if (!postDoc) {
-      return res.status(404).json({ error: 'Post not found' });
-    }
-    res.json(postDoc);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-
-app.delete('/post/:id', async (req, res) => {
-  const { id } = req.params;
-
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) {
-      res.status(401).json({ error: 'Invalid token' });
-      return;
-    }
-
+  app.get('/post/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-      const postDoc = await Post.findById(id); // Find the post by ID
+      const postDoc = await Post.findById(id).populate('author', ['username']);
       if (!postDoc) {
-        res.status(404).json({ error: 'Post not found' });
-        return;
+        return res.status(404).json({ error: 'Post not found' });
       }
-
-      const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-      if (!isAuthor) {
-        res.status(403).json({ error: 'Unauthorized' });
-        return;
-      }
-
-      // Delete the image from the 'uploads' folder
-      fs.unlinkSync(__dirname + '/uploads/' + postDoc.cover);
-
-      // Delete the post from the database
-      await postDoc.remove();
-
-      res.json({ message: 'Post deleted successfully' });
+      res.json(postDoc);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-});
 
 
-
-app.get('/profile/:authorId', async (req, res) => {
-  const { authorId } = req.params;
-
-  try {
-    // Find the user by the given authorId
-    const user = await User.findById(authorId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'Author not found' });
-    }
-
-    // Find posts by the authorId and populate the 'author' field with 'username'
-    const posts = await Post.find({ author: authorId })
-      .populate('author', ['username'])
-      .sort({ createdAt: -1 })
-      .limit(10); // Limit the results to 10 posts
-
-    res.json({ author: user.username, posts });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.delete('/profile/:authorId', async (req, res) => {
-  const { authorId } = req.params;
+  app.delete('/post/:id', async (req, res) => {
+    const { id } = req.params;
   
-  try {
-    // Delete the user and all associated posts
-    await User.findByIdAndDelete(authorId);
-    await Post.deleteMany({ author: authorId });
+    const { token } = req.cookies;
+    jwt.verify(token, secret, {}, async (err, info) => {
+      if (err) {
+        res.status(401).json({ error: 'Invalid token' });
+        return;
+      }
+  
+      try {
+        const postDoc = await Post.findById(id); // Find the post by ID
+        if (!postDoc) {
+          res.status(404).json({ error: 'Post not found' });
+          return;
+        }
+  
+        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+        if (!isAuthor) {
+          res.status(403).json({ error: 'Unauthorized' });
+          return;
+        }
+  
+        // Delete the image from the 'uploads' folder
+        fs.unlinkSync(__dirname + '/' + postDoc.cover);
+  
+        // Delete the post from the database
+        await postDoc.remove();
+  
+        res.json({ message: 'Post deleted successfully' });
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+  });
 
-    res.json({ message: 'User and associated posts deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+  app.get('/profile/:authorId', async (req, res) => {
+    const { authorId } = req.params;
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+    try {
+      // Find the user by the given authorId
+      const user = await User.findById(authorId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Author not found' });
+      }
+
+      // Find posts by the authorId and populate the 'author' field with 'username'
+      const posts = await Post.find({ author: authorId })
+        .populate('author', ['username'])
+        .sort({ createdAt: -1 })
+        .limit(20); 
+      res.json({ author: user.username, posts });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  app.delete('/profile/:authorId', async (req, res) => {
+    const { authorId } = req.params;
+    
+
+    try {
+      const posts = await Post.find({ author: authorId });
+      posts.forEach((post) => {
+        if (post.cover) {
+          fs.unlinkSync(__dirname + '/' + post.cover);
+        }
+      });
+
+      await Post.deleteMany({ author: authorId });
+      await User.findByIdAndDelete(authorId);
+      res.json({ message: 'User and associated posts deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+ 
+
+  });
+
+
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+  });
